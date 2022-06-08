@@ -23,6 +23,12 @@ class AuthController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
 
+        // TODO get user_type corresponding to the email and include in token always
+        // $user_type = User::where('email', $request->email)->firstOrFail()->user_type;
+        // dd($user_type);
+        // $token = auth()->claims(['user_type' => $user_type])->attempt($credentials);
+        // $payload_user_type = auth()->payload()['user_type'];
+
         $token = Auth::attempt($credentials);
         if (!$token) {
             return response()->json([
@@ -44,18 +50,19 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => 'required|string|min:6',
-        // ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string',
+        ]);
 
-        // dd('I am working');
+        // TODO input all fields
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
+
 
         $token = Auth::login($user);
         return response()->json([

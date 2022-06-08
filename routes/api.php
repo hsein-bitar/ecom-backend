@@ -27,3 +27,7 @@ Route::group(['middleware' => 'api',    'prefix' => 'auth'], function ($router) 
     Route::post('logout', [AuthController::class, 'logout'])->name("logout");
     Route::post('refresh', [AuthController::class, 'refresh'])->name("refresh");
 });
+
+// Routes related to signed in user //TODO authorize user middleware
+
+// Routes related to admin //TODO authorize admin middleware
