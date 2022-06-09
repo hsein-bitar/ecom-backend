@@ -9,7 +9,7 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-
+    // TODO change this into UserController and refactor middleware into apis routes
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
@@ -95,5 +95,37 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ]);
+    }
+
+    // TODO split this controller into middleware and controller somehow
+    public function update(Request $request)
+    {
+        // TODO authorize before updating
+        $user = User::findOrFail($request->id);
+        $user->name = $request->name;
+        $user->gender = $request->gender;
+        $user->date_of_birth = $request->date_of_birth;
+        $user->save();
+
+        return response()->json([
+            // TODO return token //TODO make user activate email
+            "message" => "Info update successully"
+        ], 200);
+    }
+
+    public function upgrade(Request $request)
+    {
+        // TODO authorize before upgrading
+
+        $target_id = $request->target_id;
+
+        $user = User::findOrFail($target_id);
+        if ($user) {
+            $user->user_type = 1 - $user->user_type; // TODO if this won't work, force fill it
+            $user->save();
+            return response()->json([
+                "message" => "User type changed successfully"
+            ], 200);
+        }
     }
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->char('category', 100);
             $table->text('details');
             // TODO check what type of data this gives
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 5, 2);
             $table->string('image_uri');
             // TODO add price
             $table->unsignedBigInteger('admin_id');
