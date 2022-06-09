@@ -9,26 +9,20 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    // }
 
     public function login(Request $request)
     {
+        // validate user input
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
+
+        // get user_type corresponding to the email and include in token always
         $credentials = $request->only('email', 'password');
-
-        // TODO get user_type corresponding to the email and include in token always
-        // $user_type = User::where('email', $request->email)->firstOrFail()->user_type;
-        // dd($user_type);
-        // $token = auth()->claims(['user_type' => $user_type])->attempt($credentials);
-        // $payload_user_type = auth()->payload()['user_type'];
-
+        $user_type = User::where('email', $credentials['email'])->firstOrFail()->user_type;
+        // $token = Auth::claims(['user_type' => $user_type])->attempt($credentials);
         $token = Auth::attempt($credentials);
         if (!$token) {
             return response()->json([
@@ -40,6 +34,7 @@ class UserController extends Controller
         $user = Auth::user();
         return response()->json([
             'status' => 'success',
+            'message' => 'Successfully logged in',
             'user' => $user,
             'authorisation' => [
                 'token' => $token,
@@ -56,21 +51,36 @@ class UserController extends Controller
             'password' => 'required|string',
         ]);
 
-        // TODO input all fields
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->gender = $request->gender;
+        $user->user_type = 0;
+        $user->date_of_birth = $request->date_of_birth;
         $user->save();
+        $user->id = $user->id;
 
-
-        $token = Auth::login($user);
+        $token = Auth::claims(['user_type' => $user->user_type])->login($user);
         return response()->json([
             'status' => 'success',
-            'message' => 'User created successfully',
+            'message' => 'Successfully registered and logged in',
             'user' => $user,
             'authorisation' => [
                 'token' => $token,
+                'type' => 'bearer',
+            ]
+        ]);
+    }
+
+    public function refresh()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'message' => 'Your token was refreshed',
+            'authorisation' => [
+                'token' => Auth::refresh(),
                 'type' => 'bearer',
             ]
         ]);
@@ -85,46 +95,38 @@ class UserController extends Controller
         ]);
     }
 
-    public function refresh()
-    {
-        return response()->json([
-            'status' => 'success',
-            'user' => Auth::user(),
-            'authorisation' => [
-                'token' => Auth::refresh(),
-                'type' => 'bearer',
-            ]
-        ]);
-    }
 
-    // TODO split this controller into middleware and controller somehow
     public function update(Request $request)
     {
-        // TODO authorize before updating
-        $user = User::findOrFail($request->id);
+        $user = auth()->user();
         $user->name = $request->name;
         $user->gender = $request->gender;
         $user->date_of_birth = $request->date_of_birth;
         $user->save();
 
         return response()->json([
-            // TODO return token //TODO make user activate email
-            "message" => "Info update successully"
+            'status' => 'success',
+            'message' => 'Successfully updated your info'
         ], 200);
     }
 
+    public function index(Request $request)
+    {
+        $users = User::all();
+        return response()->json([
+            'status' => 'success',
+            'users' => $users,
+        ], 200);
+    }
     public function upgrade(Request $request)
     {
-        // TODO authorize before upgrading
-
-        $target_id = $request->target_id;
-
-        $user = User::findOrFail($target_id);
+        $user = User::findOrFail($request->target_id);
         if ($user) {
-            $user->user_type = 1 - $user->user_type; // TODO if this won't work, force fill it
+            $user->user_type = 1 - $user->user_type;
             $user->save();
             return response()->json([
-                "message" => "User type changed successfully"
+                'status' => 'success',
+                "message" => "User type toggled successfully"
             ], 200);
         }
     }

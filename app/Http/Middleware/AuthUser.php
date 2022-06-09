@@ -22,6 +22,5 @@ class AuthUser
         if ($user) {
             return $next($request);
         }
-        // return $next($request);
     }
 }

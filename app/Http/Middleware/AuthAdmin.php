@@ -22,6 +22,5 @@ class AuthAdmin
         if ($user && $user->user_type == 1) {
             return $next($request);
         }
-        // return $next($request);
     }
 }
