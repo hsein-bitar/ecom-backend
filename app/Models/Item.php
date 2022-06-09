@@ -13,7 +13,6 @@ class Item extends Model
         'title',
         'details',
         'price',
-        // TODO upload convert image
         'image_uri',
         'admin_id',
     ];

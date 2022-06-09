@@ -17,12 +17,11 @@ class AuthAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        // TODO validate and check user type
+        // validate & check user_type
         $user = Auth::user();
-        if ($user && $user->user_type_id == 1) {
+        if ($user && $user->user_type == 1) {
             return $next($request);
         }
-
-        return $next($request);
+        // return $next($request);
     }
 }

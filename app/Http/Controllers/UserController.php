@@ -7,13 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
-class AuthController extends Controller
+class UserController extends Controller
 {
-    // TODO change this into UserController and refactor middleware into apis routes
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    // }
 
     public function login(Request $request)
     {
@@ -21,6 +20,7 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
+
         $credentials = $request->only('email', 'password');
 
         // TODO get user_type corresponding to the email and include in token always
