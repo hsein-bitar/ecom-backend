@@ -21,7 +21,7 @@ class UserController extends Controller
 
         // get user_type corresponding to the email and include in token always
         $credentials = $request->only('email', 'password');
-        $user_type = User::where('email', $credentials['email'])->firstOrFail()->user_type;
+        // $user_type = User::where('email', $credentials['email'])->firstOrFail()->user_type;
         // $token = Auth::claims(['user_type' => $user_type])->attempt($credentials);
         $token = Auth::attempt($credentials);
         if (!$token) {
@@ -61,7 +61,8 @@ class UserController extends Controller
         $user->save();
         $user->id = $user->id;
 
-        $token = Auth::claims(['user_type' => $user->user_type])->login($user);
+        // $token = Auth::claims(['user_type' => $user->user_type])->login($user);
+        $token = Auth::login($user);
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully registered and logged in',
@@ -118,12 +119,13 @@ class UserController extends Controller
             'users' => $users,
         ], 200);
     }
+
     public function upgrade(Request $request)
     {
-        $user = User::findOrFail($request->target_id);
-        if ($user) {
-            $user->user_type = 1 - $user->user_type;
-            $user->save();
+        $target = User::findOrFail($request->target_id);
+        if ($target) {
+            $target->user_type = 1 - $target->user_type;
+            $target->save();
             return response()->json([
                 'status' => 'success',
                 "message" => "User type toggled successfully"
