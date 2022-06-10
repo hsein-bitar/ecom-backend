@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Models\Item;
 use App\Models\Image;
+use App\Models\Like;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -34,11 +35,13 @@ class ItemController extends Controller
         $item = Item::findOrFail($id);
         // get all images of this item from images table and add to response
         $images = Image::all()->where('item_id', $item->id);
+        $likes = Like::all()->where('item_id', $item->id);
         if ($item) {
             return response()->json([
                 'status' => 'success',
                 'item' => $item,
-                'images' => $images
+                'images' => $images,
+                'likes' => $likes,
             ]);
         } //TODO handle not found response
     }
