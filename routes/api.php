@@ -75,7 +75,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'likes'], function ($router) {
         // only for signed in users
         Route::group(['middleware' => 'role.user'], function () {
-            Route::post('/toggle', [LikeController::class, 'create'])->name("create-review");
+            Route::post('/toggle', [LikeController::class, 'toggle'])->name("toggle-like");
         });
     });
 

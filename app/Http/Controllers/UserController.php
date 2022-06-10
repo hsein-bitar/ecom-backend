@@ -114,6 +114,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        // gets all users
         $users = User::all();
         return response()->json([
             'status' => 'success',
