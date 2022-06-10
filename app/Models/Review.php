@@ -14,4 +14,9 @@ class Review extends Model
         'user_id',
         'item_id',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

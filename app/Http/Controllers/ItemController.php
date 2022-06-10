@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\Image;
 use App\Models\Like;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,15 +17,19 @@ class ItemController extends Controller
     //
     public function index(Request $request)
     {
-        // check if category
-        if ($request->category) {
+        $user = Auth::user();
+        // TODO fix fav API
+        // if ($request->favorites == true) {
+        //     $query = Item::join('likes', function ($join) {
+        //         $join->on('likes.item_id', '=', 'items.id')
+        //             ->where('likes.user_id', '=', 2);
+        //     });
+        // }
+        $query = Item::where('title', 'like', '%' . $request->search . '%');
+        if ($request->category_id) {
+            $query = $query->where('category_id', $request->category_id);
         }
-        // TODO 
-        // check if favorites
-        // check if search
-        $items = Item::with('likes')->get();
-
-
+        $items = $query->with('likes')->get();
         return response()->json([
             'status' => 'success',
             'items' => $items,
@@ -33,14 +38,19 @@ class ItemController extends Controller
     public function show($id)
     {
         // return all details of this particular item
-        // $item = Item::findOrFail($id)
-        // $item = Item::where('id', $id)
         $item = Item::where('items.id', '=', $id)
             ->with('likes')
             ->with('images')
-            ->with('reviews')
+            ->with('reviews') // TODO avg rating, , AVG('reviews.rating')
+            // ->groupBy('item_id')
+            // ->avg('reviews.rating')
             ->get();
-        // get all images of this item from images table and add to response
+
+        // $rates = DB::table('reviews')
+        //     ->where('p_id', 2)
+        //     ->groupBy('p_id')
+        //     ->avg('rate');
+
         // $images = Image::all()->where('item_id', $item->id);
         // $likes = Like::where('item_id', $item->id)->get();
         if ($item) {
@@ -55,12 +65,6 @@ class ItemController extends Controller
 
     public function create(Request $request)
     {
-        // $category = Category::findorFail($request->category);
-        // dd($category);
-
-        // if (!$category) {
-        //     echo 'category missing';
-        // }
         if ($request->hasFile('image')) {
             $image = $request->image;
             if ($image->isValid()) {

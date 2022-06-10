@@ -49,7 +49,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'items'], function ($router) {
         // only for signed in users
         Route::group(['middleware' => 'role.user'], function () {
-            Route::get('/', [ItemController::class, 'index'])->name("get-all-items");
+            Route::post('/', [ItemController::class, 'index'])->name("get-all-items");
             Route::get('/{id}', [ItemController::class, 'show'])->name("get-item");
         });
         // only for signed in admins
