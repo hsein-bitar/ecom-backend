@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,14 @@ Route::group(['prefix' => 'v1'], function () {
         // only for signed in users
         Route::group(['middleware' => 'role.user'], function () {
             Route::post('/toggle', [LikeController::class, 'create'])->name("create-review");
+        });
+    });
+
+    // ImageController
+    Route::group(['prefix' => 'images'], function ($router) {
+        // only for signed in admins
+        Route::group(['middleware' => 'role.admin'], function () {
+            Route::post('/add', [ImageController::class, 'add'])->name("add-images");
         });
     });
 });

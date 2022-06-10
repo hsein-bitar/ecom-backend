@@ -23,7 +23,7 @@ class UserController extends Controller
         $credentials = $request->only('email', 'password');
         // $user_type = User::where('email', $credentials['email'])->firstOrFail()->user_type;
         // $token = Auth::claims(['user_type' => $user_type])->attempt($credentials);
-        $token = Auth::attempt($credentials);
+        $token = Auth::setTTL(4000)->attempt($credentials);
         if (!$token) {
             return response()->json([
                 'status' => 'error',
@@ -62,7 +62,8 @@ class UserController extends Controller
         $user->id = $user->id;
 
         // $token = Auth::claims(['user_type' => $user->user_type])->login($user);
-        $token = Auth::login($user);
+        // $token = Auth::login($user);
+        $token = Auth::setTTL(4000)->login($user);
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully registered and logged in',
