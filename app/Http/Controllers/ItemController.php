@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Models\Image;
@@ -44,6 +45,12 @@ class ItemController extends Controller
 
     public function create(Request $request)
     {
+        // $category = Category::findorFail($request->category);
+        // dd($category);
+
+        // if (!$category) {
+        //     echo 'category missing';
+        // }
         if ($request->hasFile('image')) {
             $image = $request->image;
             if ($image->isValid()) {
@@ -53,7 +60,7 @@ class ItemController extends Controller
 
                 $item = new Item();
                 $item->title = $request->title;
-                $item->category = $request->category;
+                $item->category_id = $request->category_id;
                 $item->details = $request->details;
                 $item->price = $request->price;
                 $item->image_uri = $image_uri;

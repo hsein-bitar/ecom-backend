@@ -8,6 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,14 @@ Route::group(['prefix' => 'v1'], function () {
         // only for signed in admins
         Route::group(['middleware' => 'role.admin'], function () {
             Route::post('/add', [ImageController::class, 'add'])->name("add-images");
+        });
+    });
+
+    // CategoryController
+    Route::group(['prefix' => 'categories'], function ($router) {
+        // only for signed in admins
+        Route::group(['middleware' => 'role.admin'], function () {
+            Route::post('/add', [CategoryController::class, 'add'])->name("add-category");
         });
     });
 });

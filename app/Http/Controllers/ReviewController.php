@@ -25,10 +25,11 @@ class ReviewController extends Controller
         $review = new Review();
         $review->text = $request->text;
         $review->rating = $request->rating;
+        $review->status = 0;
         $review->user_id = $request->user_id;
-        $review->restaurant_id = $request->restaurant_id;
-
+        $review->item_id = $request->item_id;
         $review->save();
+
         return response()->json([
             "message" => "review added successfully, waiting admin approval",
         ], 200);
@@ -39,7 +40,7 @@ class ReviewController extends Controller
     public function activate(Request $request)
     {
         $action = $request->action;
-        $review = Review::where('id', '=', $request->id)->first();
+        $review = Review::where('id', '=', $request->review_id)->first();
 
         if ($review) {
             if ($action == 0) {
