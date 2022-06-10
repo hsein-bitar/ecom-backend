@@ -22,7 +22,8 @@ class ItemController extends Controller
         // TODO 
         // check if favorites
         // check if search
-        $items = Item::all();
+        $items = Item::with('likes')->get();
+
 
         return response()->json([
             'status' => 'success',
@@ -32,16 +33,22 @@ class ItemController extends Controller
     public function show($id)
     {
         // return all details of this particular item
-        $item = Item::findOrFail($id);
+        // $item = Item::findOrFail($id)
+        // $item = Item::where('id', $id)
+        $item = Item::where('items.id', '=', $id)
+            ->with('likes')
+            ->with('images')
+            ->with('reviews')
+            ->get();
         // get all images of this item from images table and add to response
-        $images = Image::all()->where('item_id', $item->id);
-        $likes = Like::all()->where('item_id', $item->id);
+        // $images = Image::all()->where('item_id', $item->id);
+        // $likes = Like::where('item_id', $item->id)->get();
         if ($item) {
             return response()->json([
                 'status' => 'success',
                 'item' => $item,
-                'images' => $images,
-                'likes' => $likes,
+                // 'images' => $images,
+                // 'likes' => $likes,
             ]);
         } //TODO handle not found response
     }

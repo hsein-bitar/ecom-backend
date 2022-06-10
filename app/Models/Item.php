@@ -17,4 +17,17 @@ class Item extends Model
         'image_uri',
         'admin_id',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
