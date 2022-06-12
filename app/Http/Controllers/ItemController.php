@@ -19,13 +19,6 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        // TODO fix fav API
-        // if ($request->favorites == true) {
-        //     $query = Item::join('likes', function ($join) {
-        //         $join->on('likes.item_id', '=', 'items.id')
-        //             ->where('likes.user_id', '=', 2);
-        //     });
-        // }
         $query = Item::where('title', 'like', '%' . $request->search . '%');
         if ($request->category_id) {
             $query = $query->where('category_id', $request->category_id);
@@ -90,16 +83,18 @@ class ItemController extends Controller
         }
     }
 
-    // public function favorites(Request $request)
-    // {
-    //     // $user = auth()->user();
-    //     $user = Auth::user();
-    //     // $favorites = $user->items()->pivot->where("user_id",  auth()->user()->id);
-    //     $favorites = Auth::user()->items()->where("user_id",  auth()->user()->id)->get();
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Here are your favorites',
-    //         'items' => $favorites,
-    //     ]);
-    // }
+    // TODO fix this, returning empty array
+    public function favorites(Request $request)
+    {
+        // $user = auth()->user();
+        // $user = Auth::user();
+        // $favorites = $user->items()->pivot->where("user_id",  auth()->user()->id);
+        // $favorites = Auth::user()->items()->get();
+        dd('jeeeeh');
+        return response()->json([
+            'status' => 'successss',
+            'message' => 'Here are your favorites',
+            // 'items' => $favorites,
+        ]);
+    }
 }

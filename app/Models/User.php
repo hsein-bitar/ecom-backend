@@ -74,9 +74,16 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Review::class);
     }
-    // public function items()
-    // {
-    //     // return $this->hasManyThrough(Item::class)->using('App\Models\Like');
-    //     return $this->hasManyThrough('App\Models\Item', 'App\Models\Like');
-    // }
+    public function items()
+    {
+        // return $this->hasManyThrough(Item::class)->using('App\Models\Like');
+        return $this->hasManyThrough(
+            'App\Models\Item',
+            'App\Models\Like',
+            'item_id', //foreign on intermediate/likes
+            'id',
+            'id', //local on users
+            'user_id', //local on intermediate/likes
+        );
+    }
 }
