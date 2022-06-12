@@ -12,7 +12,7 @@ class LikeController extends Controller
     {
         $like = Like::where(
             'user_id',
-            $request->user_id
+            auth()->user()->id
         )->where(
             'item_id',
             $request->item_id
