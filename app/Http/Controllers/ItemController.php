@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Image;
 use App\Models\Like;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -88,4 +89,17 @@ class ItemController extends Controller
             }
         }
     }
+
+    // public function favorites(Request $request)
+    // {
+    //     // $user = auth()->user();
+    //     $user = Auth::user();
+    //     // $favorites = $user->items()->pivot->where("user_id",  auth()->user()->id);
+    //     $favorites = Auth::user()->items()->where("user_id",  auth()->user()->id)->get();
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Here are your favorites',
+    //         'items' => $favorites,
+    //     ]);
+    // }
 }
