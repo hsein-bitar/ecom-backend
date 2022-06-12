@@ -25,7 +25,7 @@ class LikeController extends Controller
             ]);
         }
         $like = new Like();
-        $like->user_id = $request->user_id;
+        $like->user_id =  auth()->user()->id;
         $like->item_id = $request->item_id;
         $like->save();
         return response()->json([

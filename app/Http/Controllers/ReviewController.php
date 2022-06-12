@@ -25,12 +25,13 @@ class ReviewController extends Controller
         $review = new Review();
         $review->text = $request->text;
         $review->rating = $request->rating;
-        $review->status = 0;
-        $review->user_id = $request->user_id;
+        $review->status = 1;
+        $review->user_id =  auth()->user()->id;
         $review->item_id = $request->item_id;
         $review->save();
 
         return response()->json([
+            'status' => 'success',
             "message" => "review added successfully, waiting admin approval",
         ], 200);
     }

@@ -27,7 +27,7 @@ class ImageController extends Controller
                     $item_image->image_uri = $image_uri;
                     $item_image->name = $request->name;
                     $item_image->item_id = $request->item_id;
-                    $item_image->admin_id = $request->admin_id;
+                    $item_image->admin_id =  auth()->user()->id;
                     $item_image->save();
                 }
             }

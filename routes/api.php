@@ -32,7 +32,7 @@ Route::group(['prefix' => 'v1'], function () {
         // accessible to all
         Route::post('login', [UserController::class, 'login'])->name("login");
         Route::post('register', [UserController::class, 'register'])->name("register");
-        // only for signed in users
+        // for all signed in users, including admins
         Route::group(['middleware' => 'role.user'], function () {
             // Route::post('refresh', [UserController::class, 'refresh'])->name("refresh");
             Route::post('logout', [UserController::class, 'logout'])->name("logout");
@@ -47,7 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     // ItemController
     Route::group(['prefix' => 'items'], function ($router) {
-        // only for signed in users
+        // for all signed in users, including admins
         Route::group(['middleware' => 'role.user'], function () {
             Route::post('/', [ItemController::class, 'index'])->name("get-all-items");
             Route::get('/{id}', [ItemController::class, 'show'])->name("get-item");
@@ -60,7 +60,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     // ReviewController
     Route::group(['prefix' => 'reviews'], function ($router) {
-        // only for signed in users
+        // for all signed in users, including admins
         Route::group(['middleware' => 'role.user'], function () {
             Route::post('/create', [ReviewController::class, 'create'])->name("create-review");
         });
@@ -73,7 +73,7 @@ Route::group(['prefix' => 'v1'], function () {
 
     // LikeController
     Route::group(['prefix' => 'likes'], function ($router) {
-        // only for signed in users
+        // for all signed in users, including admins
         Route::group(['middleware' => 'role.user'], function () {
             Route::post('/toggle', [LikeController::class, 'toggle'])->name("toggle-like");
         });
@@ -89,6 +89,10 @@ Route::group(['prefix' => 'v1'], function () {
 
     // CategoryController
     Route::group(['prefix' => 'categories'], function ($router) {
+        // for all signed in users, including admins
+        Route::group(['middleware' => 'role.user'], function () {
+            Route::get('/', [CategoryController::class, 'index'])->name("get-all-categories");
+        });
         // only for signed in admins
         Route::group(['middleware' => 'role.admin'], function () {
             Route::post('/add', [CategoryController::class, 'add'])->name("add-category");

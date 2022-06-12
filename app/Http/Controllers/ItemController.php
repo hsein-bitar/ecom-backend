@@ -29,7 +29,9 @@ class ItemController extends Controller
         if ($request->category_id) {
             $query = $query->where('category_id', $request->category_id);
         }
-        $items = $query->with('likes')->get();
+        $items = $query
+            ->with('likes')
+            ->withCount('likes')->get();
         return response()->json([
             'status' => 'success',
             'items' => $items,
@@ -40,16 +42,11 @@ class ItemController extends Controller
         // return all details of this particular item
         $item = Item::where('items.id', '=', $id)
             ->with('likes')
+            ->withCount('likes')
             ->with('images')
-            ->with('reviews') // TODO avg rating, , AVG('reviews.rating')
-            // ->groupBy('item_id')
-            // ->avg('reviews.rating')
+            ->with('reviews')
+            // TODO avg rating, , AVG('reviews.rating')
             ->get();
-
-        // $rates = DB::table('reviews')
-        //     ->where('p_id', 2)
-        //     ->groupBy('p_id')
-        //     ->avg('rate');
 
         // $images = Image::all()->where('item_id', $item->id);
         // $likes = Like::where('item_id', $item->id)->get();
