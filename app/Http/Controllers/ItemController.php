@@ -23,6 +23,7 @@ class ItemController extends Controller
         if ($request->category_id) {
             $query = $query->where('category_id', $request->category_id);
         }
+        dd('jeeeeh11');
         $items = $query
             ->with('likes')
             ->withCount('likes')->get();
@@ -33,6 +34,7 @@ class ItemController extends Controller
     }
     public function show($id)
     {
+        dd('jeeeehidid');
         // return all details of this particular item
         $item = Item::where('items.id', '=', $id)
             ->with('likes')
@@ -74,6 +76,8 @@ class ItemController extends Controller
                 $item->admin_id = auth()->user()->id;
                 $item->save();
 
+
+                dd('jeeeehcreate');
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Successfully created item',
