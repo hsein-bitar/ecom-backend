@@ -22,7 +22,7 @@ class ImageController extends Controller
                     Storage::disk('images')->put($name, file_get_contents($image));
                     $image_uri = asset('storage/items_images/' . $name);
                     $images[] =  $image_uri;
-                    // TODO put the url into table images
+                    // TODO use this api on the frontend
                     $item_image = new Image();
                     $item_image->image_uri = $image_uri;
                     $item_image->name = $request->name;

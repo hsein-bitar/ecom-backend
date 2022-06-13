@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Review;
 use App\Models\Image;
 use App\Models\Like;
 use App\Models\User;
@@ -23,7 +24,6 @@ class ItemController extends Controller
         if ($request->category_id) {
             $query = $query->where('category_id', $request->category_id);
         }
-        dd('jeeeeh11');
         $items = $query
             ->with('likes')
             ->withCount('likes')->get();
@@ -34,26 +34,27 @@ class ItemController extends Controller
     }
     public function show($id)
     {
-        dd('jeeeehidid');
+        // get average rating of this item
+        $average = Review::where('item_id', $id)->avg('rating');
         // return all details of this particular item
         $item = Item::where('items.id', '=', $id)
             ->with('likes')
             ->withCount('likes')
             ->with('images')
             ->with('reviews')
-            // TODO avg rating, , AVG('reviews.rating')
             ->get();
 
-        // $images = Image::all()->where('item_id', $item->id);
-        // $likes = Like::where('item_id', $item->id)->get();
         if ($item) {
             return response()->json([
                 'status' => 'success',
                 'item' => $item,
-                // 'images' => $images,
-                // 'likes' => $likes,
+                'average' => $average,
             ]);
-        } //TODO handle not found response
+        }
+        return response()->json([
+            'status' => 'fail',
+            'message' => 'item was not found'
+        ]);
     }
 
     public function create(Request $request)
@@ -76,8 +77,6 @@ class ItemController extends Controller
                 $item->admin_id = auth()->user()->id;
                 $item->save();
 
-
-                dd('jeeeehcreate');
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Successfully created item',
@@ -87,18 +86,18 @@ class ItemController extends Controller
         }
     }
 
-    // TODO fix this, returning empty array
+
+    // TODO fix this, returning empty array, filtering items on frontend working properly but I am trying to get this to work
     public function favorites(Request $request)
     {
-        // $user = auth()->user();
-        // $user = Auth::user();
+        $user = auth()->user();
+        $user = Auth::user();
         // $favorites = $user->items()->pivot->where("user_id",  auth()->user()->id);
-        // $favorites = Auth::user()->items()->get();
-        dd('jeeeeh');
+        $favorites = Auth::user()->items()->get();
         return response()->json([
             'status' => 'successss',
             'message' => 'Here are your favorites',
-            // 'items' => $favorites,
+            'items' => $favorites,
         ]);
     }
 }

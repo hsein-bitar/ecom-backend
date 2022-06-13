@@ -50,8 +50,8 @@ Route::group(['prefix' => 'v1'], function () {
         // for all signed in users, including admins
         Route::group(['middleware' => 'role.user'], function () {
             Route::post('/', [ItemController::class, 'index'])->name("get-all-items");
-            Route::get('/{id}', [ItemController::class, 'show'])->name("get-item");
             Route::get('/favorites', [ItemController::class, 'favorites'])->name("get-favorites");
+            Route::get('/{id}', [ItemController::class, 'show'])->name("get-item");
         });
         // only for signed in admins
         Route::group(['middleware' => 'role.admin'], function () {
